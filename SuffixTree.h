@@ -17,6 +17,36 @@
 #include <vector>
 #include <utility>
 #include <limits>
+#include <unordered_map>
+
+template <typename charT>
+struct CharHashSetFinder
+{
+    size_t GetChild(charT c) const
+    {
+        const auto it = m_map.find(c);
+        if(it == m_map.end())
+            return std::numeric_limits<size_t>::max();
+        else
+            return (*it).second;
+    }
+    
+    void SetChild(charT c, size_t iNode)
+    {
+        m_map[c] = iNode;
+    }
+    
+    std::vector<size_t> GetChildren() const
+    {
+        std::vector<size_t> res;
+        for(const std::pair<charT, size_t>& p : m_map)
+            res.push_back(p.second);
+        return res;
+    }    
+    
+private:
+    std::unordered_map<charT, size_t> m_map;
+};
 
 // first template parameter - the character type
 // second parameter a type that will be instantiated in every tree node and will be
